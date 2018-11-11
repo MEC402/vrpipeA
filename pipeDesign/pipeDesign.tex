@@ -1,0 +1,115 @@
+\documentclass{article}
+\usepackage{fp}
+\usepackage{siunitx}
+\usepackage{tikz}
+\usetikzlibrary{positioning,3d,decorations.pathreplacing,shapes,arrows}
+
+\title{VR Content Production Pipeline Process}
+\begin{document}
+\maketitle
+
+\section*{Introduction}
+
+\section*{Pipeline}
+
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+    text width=5em, text centered, rounded corners, minimum height=1em]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{data} = [rectangle, draw, fill=yellow!20, 
+    text width=5em, text centered, rounded corners, minimum height=1em]
+
+\tikzstyle{phase} = [ draw,text width=1.6cm]
+\tikzstyle{phaseline} = [draw, -latex']
+
+\begin{figure}
+\caption{Production Pipeline Processes}
+\begin{tikzpicture}[node distance= 1cm, auto]
+\node [phase] (pre) {Pre};
+\node [phase, right=8cm  of pre, align=right] (endpre) {Pre};
+\draw[dashed]  (pre)  -- (endpre);
+
+\node[below of=pre,xshift=4cm,yshift=0.5cm] (steps) {Action};
+\node[right of=steps,xshift=2cm] (artifacts) {Data Object};
+
+\node[block, below of=steps]  (preplan) {Planning};
+\node[data, right of=preplan,xshift=2cm] (prepreport) {Production Plan};
+
+
+\node[phase, below of=pre,yshift=-2cm] (capture) {Capture};
+\node[phase, right=8cm of capture] (endcapture) {Capture};
+\draw[dashed]  (capture)  -- (endcapture);
+
+\node[block, below of=capture,xshift=4cm]  (photo) {Photo Capture};
+
+\node[data, right of=photo,xshift=2cm] (imgset) {1000+ Images};
+
+\node[phase, below of=capture,yshift=-1cm] (prod) { Production};
+\node[phase, right=8cm of prod] (endprod) {Production};
+\draw[dashed]  (prod)  -- (endprod);
+
+\node[block, below of=photo,yshift=-0.5cm]  (ingest) {Ingest};
+\node[data, right of=ingest,xshift=2cm] (imgdb) {Image DB};
+
+
+
+\node[block, below of=ingest]  (stitch) {Stitch};
+\node[data, right of=stitch,xshift=2cm] (equi) {Panorama Image};
+
+
+\node[block, below of=stitch]  (format) {Format};
+\node[data, right of=format,xshift=2cm] (tileset) {Tiles \& JSON};
+
+
+\node[phase, below of=prod,yshift=-2cm] (post) {Post};
+\node[phase, right=8cm of post] (endpost) {Post};
+\draw[dashed]  (post)  -- (endpost);
+
+\node[phase, below of=post,yshift=-2cm] (release) { Release};
+\node[phase, right=8cm of release] (endrelease) {Release};
+\draw[dashed]  (release)  -- (endrelease);
+
+\node[block, below of=release,xshift=4cm]  (publish) {Publish};
+\node[data, right of=publish,xshift=2cm] (uri) {URI};
+
+
+\node[block, below of=publish]  (display) {Display};
+\node[block, right of=display,xshift=2cm] (viewer) {tileViewer};
+
+
+\path[line] (preplan) -- (photo);
+\path[line](photo) -- (ingest);
+\path[line] (ingest) -- (stitch);
+\path[line](stitch) -- (publish);
+\path[line](publish) -- (display);
+
+\path[line](preplan) -- (prepreport);
+\path[line](prepreport) -- (photo);
+
+\path[line](photo) -- (imgset);
+\path[line](imgset) -- (ingest);
+
+\path[line](ingest) -- (imgdb);
+\path[line](imgdb) -- (stitch);
+
+
+\path[line](stitch) -- (equi);
+\path[line](equi) -- (format);
+
+\path[line](format) -- (tileset);
+\path[line](tileset) -- (publish);
+
+
+\path[line](publish) -- (uri);
+\path[line](uri) -- (display);
+
+\path[line](display) -- (viewer);
+
+
+
+
+\end{tikzpicture}
+\end{figure}
+
+
+
+\end{document}
